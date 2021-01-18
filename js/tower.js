@@ -7,8 +7,8 @@
   //===========================================================================
 
   var FPS           = 60,                                                   // 'update' frame rate fixed at 60fps independent of rendering loop
-      WIDTH         = 720,                                                  // must have width multiple of 360...
-      HEIGHT        = 540,                                                  // ... and 4:3 w:h ratio
+      WIDTH         = 360*2,                                                  // must have width multiple of 360...
+      HEIGHT        = WIDTH*0.75,                                                  // ... and 4:3 w:h ratio
       HORIZON       = HEIGHT/10,                                             // how much ground to show below the tower
       METER         = HEIGHT/20,                                            // how many pixels represent 1 meter
       COL_WIDTH     = METER * 3,                                            // 2D column width
@@ -17,12 +17,12 @@
       PLAYER_WIDTH  = METER * 1.5,                                          // player logical width
       PLAYER_HEIGHT = METER * 2,                                            // player logical height
       GROUND_SPEED  = 2,                                                    // how fast ground scrolls left-right
-      GRAVITY       = 9.8 * 4,                                              // (exagerated) gravity
+      GRAVITY       = 9.8 * 2,                                              // (exagerated) gravity
       MAXDX         = 10,                                                   // player max horizontal speed (meters per second)
       MAXDY         = (ROW_SURFACE*FPS/METER),                              // player max vertical speed (meters per second) - ENSURES CANNOT FALL THROUGH PLATFORM SURFACE
-      CLIMBDY       = 8,                                                    // player climbing speed (meters per second)
+      CLIMBDY       = 6,                                                    // player climbing speed (meters per second)
       ACCEL         = 1/4,                                                  // player take 1/4 second to reach maxdx (horizontal acceleration)
-      FRICTION      = 1/8,                                                  // player take 1/8 second to stop from maxdx (horizontal friction)
+      FRICTION      = 1/4,                                                  // player take 1/8 second to stop from maxdx (horizontal friction)
       IMPULSE       = 15 * FPS,                                             // player jump impulse
       FALLING_JUMP  = FPS/5,                                                // player allowed to jump for 1/5 second after falling off a platform
       LADDER_EDGE   = 0.6,                                                  // how far from ladder center (60%) is ladder's true collision boundary, e.g. you fall off if you get more than 60% away from center of ladder
@@ -254,7 +254,6 @@
       this.collision = this.createCollisionPoints();
       this.animation = PLAYER.STAND;
       this.score     = 0;
-
     },
 
     createCollisionPoints: function() {
@@ -575,8 +574,11 @@
     },
 
     hitMonster: function() {
-      console.log("monster hit " + this.score);
       this.hurting = true;
+      this.score = this.score - 5;
+      Dom.set(score, this.score);
+      console.log("monster hit " + this.score);
+      //Renderer.renderScore(Renderer.ctx);
       return true;
     }
 
